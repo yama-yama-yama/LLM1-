@@ -107,48 +107,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-// // 課題C用：複数のQueryを比較する実験
-// class SimpleAttention {
-//     dotProduct(a, b) {
-//         return a.reduce((sum, val, i) => sum + val * b[i], 0);
-//     }
-//     softmax(scores) {
-//         const max = Math.max(...scores);
-//         const exp = scores.map(s => Math.exp(s - max));
-//         const sum = exp.reduce((a, b) => a + b, 0);
-//         return exp.map(e => e / sum);
-//     }
-//     computeAttention(query, keys, values) {
-//         const scores = keys.map(k => this.dotProduct(query, k));
-//         const weights = this.softmax(scores);
-//         const result = values.reduce((acc, v, i) => acc + v * weights[i], 0);
-//         return { scores, weights, result };
-//     }
-// }
+const model = new SimpleAttention();
+const queries = [
+    [1, 0], // 単語Aからの視点
+    [0, 1]  // 単語Bからの視点
+];
+const keys = [[1,0], [0,1]];
+const values = [10, 20];
 
-// // ==== 実験 ====
-// const model = new SimpleAttention();
-
-// // 「単語」に対応する仮のベクトル
-// const keys = [
-//     [1, 0],   // 彼
-//     [0, 1],   // リンゴ
-//     [1, 1]    // 食べて
-// ];
-// const values = [10, 20, 30];
-
-// // 3つの視点（Query）を用意
-// const queries = {
-//     "彼": [1, 0],
-//     "リンゴ": [0, 1],
-//     "食べて": [1, 1]
-// };
-
-// for (const [word, q] of Object.entries(queries)) {
-//     const { scores, weights, result } = model.computeAttention(q, keys, values);
-//     console.log(`視点：「${word}」`);
-//     console.log("Scores:", scores.map(s => s.toFixed(2)));
-//     console.log("Weights:", weights.map(w => w.toFixed(2)));
-//     console.log("Result:", result.toFixed(2));
-//     console.log("-----------------------");
-// }
+for (const q of queries) {
+    const result = model.computeAttention(q, keys, values);
+    console.log('Query:', q, '→ Attention result:', result);
+}
